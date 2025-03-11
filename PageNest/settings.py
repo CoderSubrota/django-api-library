@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,43 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'books',
+    'djoser',
+    'rest_framework_simplejwt',
+    'drf_yasg',
+    'users'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+DJOSER = {
+    "USER_ID_FIELD": "email",  
+    "LOGIN_FIELD": "email", 
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "SERIALIZERS": {
+        "user_create": "djoser.serializers.UserCreateSerializer",
+        "user": "djoser.serializers.UserSerializer",
+        "current_user": "djoser.serializers.UserSerializer",
+    },
+    "PERMISSIONS": {
+        "user": ["rest_framework.permissions.IsAuthenticated"],
+        "user_list": ["rest_framework.permissions.IsAdminUser"],
+    },
+}
+
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -56,6 +93,8 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTH_USER_MODEL = "users.CustomUser"
 
 WSGI_APPLICATION = 'PageNest.wsgi.application'
 
@@ -110,4 +149,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField' 
